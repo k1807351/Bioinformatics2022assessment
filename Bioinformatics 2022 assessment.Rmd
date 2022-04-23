@@ -1,0 +1,92 @@
+---
+title: "Bioinformatics 2022 Assessment"
+author: "k1807351"
+date: '2022-04-05'
+output:
+  pdf_document: default
+  html_document: default
+---
+**Task 3.1. Using the sum() function and : operator, write an expression in the code snippet to evaluate the sum of all integers between 5 and 55. (5pts)**
+```{r}
+x <- c(5:55); sum (x)
+```
+**Task 3.2. Write a function called sumfun with one input parameter, called n, that calculates the sum of all integers between 5 and n. Use the function to do the calculation for n = 10, n = 20, and n = 100 and present the results. (5pt)**
+```{r}
+sumfun <- function(n) {sum(5:n) }
+sumfun(10)
+sumfun(20)
+sumfun(100)
+```
+**Task 3.3. The famous Fibonacci series is calculated as the sum of the two preceding members of the sequence, where the first two steps in the sequence are 1, 1. Write an R script using a for loop to calculate and print out the first 12 entries of the Fibonacci series. (5pt)**
+```{r}
+fib <- function(n) {  # This is the function for calculating Fibonacci using n values
+  fib <-numeric(n)
+  fib[1] <- 1 # fib of the first value is 1
+  fib[2] <- 1 # fib of the second value is 2
+  i = 3 # start the loop at the third value
+  
+  while (i <= n) { # repeat the loop for the nth value of fib
+  fib[i]=fib[i - 1] + fib[i - 2]
+  i<- i + 1
+ }
+ return(fib) # return the modified vector
+}
+
+fib(12)
+
+```
+**Task 3.4. With the mtcars dataset bundled with R, use ggplot to generate a box of miles per gallon (in the variable mpg) as a function of the number of gears (in the variable gear). Use the fill aesthetic to colour bars by number of gears. (5pt)**
+```{r}
+library(ggplot2) #check that the ggplot tool is installed. If not install it.
+
+ggplot(data = mtcars, aes(x= as.factor(gear), y= mpg)) + geom_boxplot(aes(fill= as.factor(gear) )) + ggtitle(" Box plot of Miles per gallon(mpg) as a function of gears") #plot gears against miles per gallon for cars in the dataset mtcars. Colour fill the boxes according to the number of gears.
+
+```
+
+
+
+
+
+**Task 3.5. Using the cars dataset and the function lm, fit a linear relationship between speed and breaking distance in the variable distance. What are the fitted slope and intercept of the line, and their standard errors? What are the units used for the variables in the dataset? (5pt)**
+```{r}
+x <- cars $speed; y <- cars $dist; model <- lm(formula = "y ~ x"); summary(model) #This plots a linear model between speed and breaking distance.
+```
+Fitted slope of the line=3.9324; Intercept of line= -17.579; standard errors= 6.7584 and 0.4155. Speed units- miles/hour, distance- feet
+**Task 3.6. Use ggplot to plot the data points from Task 6 and the linear fit. (5pt)**
+```{r}
+library (ggplot2)
+
+ggplot_1.0 <- ggplot(data = cars, aes(x= speed, y=dist)) + geom_point() + geom_smooth(method = "lm",formula = "y ~ x")#This command assigns the fuction ggplot to the variable ggplot_1.0
+
+ggplot_1.1 <- ggplot_1.0 + ggtitle ("A linear model displaying the relationship between breaking distance and speed")+ xlab("speed(milesperhour)")+ ylab("dist(feet)") #This command creates ggplot_1.1 and adds labels to the x and y axis, as well as adding a title to the graph.
+
+ggplot_1.1#This plots the graph, displaying it in the plot window.
+
+```
+
+
+
+
+
+**3.7. Again using the cars dataset, now use linear regression (lm) to estimate the average reaction time for the driver to start breaking (in seconds). To simplify matters you may assume that once breaking commences, breaking distance is proportional to the square of the speed. Explain the steps in your analysis. Do you get reasonable results? Finally, use ggplot to plot the data points and the fitted relationship. (10pt)**
+```{r}
+dist_m <- cars$dist* 0.000189394 # Variable “dist_m” is assigned to the breaking distance in miles. The distance is converted to miles by multiplying by the value of one foot in miles; 1 foot is 0.000189394 miles
+speed_m_h <- cars $speed^2  # Variable "speed_m_h" is assigned to the speed in miles per hour. ^2 is used because we have been told to assume that breaking distance is proportional to the square of speed 
+ lm(formula = dist_m ~ speed_m_h) #this creates the linear model
+
+```
+```{r}
+reaction_time <- 2.438e-05*2 #Using this model, the slope is equivalent to half of the average reaction time, hence to fine the reaction time, *2 is used. This is true is speed and distance are constant.
+converted_reaction_time <- reaction_time/3600 #reaction time is converted from from hours to seconds by dividing by 3600, the number of seconds in one hour
+converted_reaction_time #this displays the numerical value for converted reaction time
+```
+This result is not reasonable as time cannot be a negative value.
+```{r}
+library(ggplot2)
+    plot_1 <- ggplot(data = cars, aes(speed_m_h, dist_m))+geom_point() 
+    plot_2 <- plot_1 + geom_smooth(method = "lm", formula = dist_m ~ speed_m_h)
+    plot_3 <- plot_2 + ggtitle("Regression model of breaking distance and speed")
+    plot_3
+
+```
+
